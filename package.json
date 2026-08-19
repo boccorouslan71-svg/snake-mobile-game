@@ -1,0 +1,11 @@
+{
+  "name": "snake-game-mobile",
+  "version": "1.0.0",
+  "description": "Mini jeu mobile Snake en HTML5",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": ["game", "snake", "mobile", "html5"],
+  "license": "MIT"
+}
