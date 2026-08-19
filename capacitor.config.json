@@ -1,0 +1,13 @@
+# Capacitor Configuration
+{
+  "appId": "com.snake.game.mobile",
+  "appName": "Snake Mobile",
+  "webDir": ".",
+  "bundledWebRuntime": false,
+  "plugins": {
+    "StatusBar": {
+      "style": "Dark",
+      "backgroundColor": "#1a1a2e"
+    }
+  }
+}
