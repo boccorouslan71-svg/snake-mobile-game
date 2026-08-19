@@ -1,0 +1,95 @@
+name: Build Android Release
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (e.g., 1.0.0)'
+        required: true
+        default: '1.0.0'
+
+jobs:
+  build:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: package.json
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Install Capacitor
+      run: npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/clipboard @capacitor/status-bar
+
+    - name: Create Capacitor config
+      run: |
+        cat > capacitor.config.json << 'EOF'
+        {
+          "appId": "com.snake.game.mobile",
+          "appName": "Snake Mobile",
+          "webDir": ".",
+          "bundledWebRuntime": false,
+          "plugins": {
+            "StatusBar": {
+              "style": "Dark",
+              "backgroundColor": "#1a1a2e"
+            }
+          }
+        }
+        EOF
+
+    - name: Sync Capacitor
+      run: npx cap sync android
+
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Build APK
+      working-directory: ./android
+      run: ./gradlew assembleDebug
+
+    - name: Upload debug APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: snake-mobile-debug
+        path: android/app/build/outputs/apk/debug/app-debug.apk
+        retention-days: 30
+
+    - name: Create release
+      if: github.event_name == 'push'
+      uses: softprops/action-gh-release@v2
+      with:
+        files: android/app/build/outputs/apk/debug/app-debug.apk
+        tag_name: v1.0.0
+        name: Snake Mobile v1.0.0
+        body: |
+          ## 🐍 Snake Mobile Game
+
+          Application Android native construite depuis le jeu web Snake PWA.
+
+          ### Fonctionnalités
+          - 🎮 Contrôles tactiles natifs
+          - 📱 Installation directe
+          - 💾 Work offline
+          - 🎨 Design responsive
+
+          ### Installation
+          Télécharger l'APK ci-dessous et l'installer sur votre appareil Android.
+
+          > ⚠️ Note: Il faut autoriser l'installation depuis des sources inconnues.
+        draft: false
+        prerelease: false
