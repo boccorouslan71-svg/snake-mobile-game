@@ -27,10 +27,10 @@ jobs:
         cache-dependency-path: package.json
 
     - name: Install dependencies
-      run: npm ci
+      run: npm install
 
     - name: Install Capacitor
-      run: npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/clipboard @capacitor/status-bar
+      run: npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/status-bar --save-dev
 
     - name: Create Capacitor config
       run: |
@@ -74,8 +74,8 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         files: android/app/build/outputs/apk/debug/app-debug.apk
-        tag_name: v1.0.0
-        name: Snake Mobile v1.0.0
+        tag_name: v${{ github.event.inputs.version || '1.0.0' }}
+        name: Snake Mobile v${{ github.event.inputs.version || '1.0.0' }}
         body: |
           ## 🐍 Snake Mobile Game
 
