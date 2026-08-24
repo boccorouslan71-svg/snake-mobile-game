@@ -4,8 +4,15 @@
   "description": "Mini jeu mobile Snake en HTML5",
   "main": "index.html",
   "scripts": {
-    "start": "npx serve ."
+    "start": "npx serve .",
+    "cap:sync": "npx cap sync android"
   },
   "keywords": ["game", "snake", "mobile", "html5"],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@capacitor/android": "^6.1.0",
+    "@capacitor/cli": "^6.1.0",
+    "@capacitor/core": "^6.1.0",
+    "@capacitor/status-bar": "^6.0.0"
+  }
 }
